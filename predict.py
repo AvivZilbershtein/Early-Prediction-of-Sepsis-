@@ -5,7 +5,7 @@ import os
 from sklearn import preprocessing
 import pickle
 
-PATH = r"/home/student/"
+PATH = r"/home/student/Early-Prediction-of-Sepsis-"
 
 
 def load_files(path_folder):
