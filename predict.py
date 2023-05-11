@@ -2,7 +2,7 @@ import sys
 import pandas as pd
 import re
 import os
-from sklearn import preprocessing
+from sklearn import preprocessing, f1_score
 import pickle
 
 PATH = r"/home/student/Early-Prediction-of-Sepsis-"
@@ -58,7 +58,7 @@ def main(argv):
             test_df_aggregated_filtered[feature].mean())
 
     test_df_aggregated_filtered_not_nan = test_df_aggregated_filtered.drop(convert_to_binary, axis=1)
-
+    y_true = test_df_aggregated_filtered_not_nan[['SepsisLabel']]
     X_without_label_test = test_df_aggregated_filtered_not_nan.drop('SepsisLabel', axis=1)  # Predictors
     X_test_file = preprocessing.scale(X_without_label_test)
 
@@ -67,6 +67,7 @@ def main(argv):
     xgb_best = pickle.load(open(filepath, 'rb'))
 
     predictions_final = xgb_best.predict(X_test_file)
+    print("f1_score : ",f1_score(y_true,predictions_final))
     # Save results to a csv
     results = pd.DataFrame(list(zip(list(X_without_label_test.reset_index()['patient id']), list(predictions_final))),
                            columns=['id', 'prediction'])
@@ -76,6 +77,7 @@ def main(argv):
     results = results.sort_values('suffix')
     results = results.drop('suffix', axis=1)
     results.to_csv(PATH+r"/prediction.csv", index=False)
+    print("Done. The prediciton csv file is in your directory")
 
 
 if __name__ == "__main__":
