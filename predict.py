@@ -5,8 +5,6 @@ import os
 from sklearn import preprocessing
 import pickle
 
-PATH = r"/home/student/Early-Prediction-of-Sepsis-"
-
 
 def load_files(path_folder):
     df_patients_train = []
@@ -62,7 +60,7 @@ def main(argv):
     X_test_file = preprocessing.scale(X_without_label_test)
 
     # load model
-    filepath = PATH+r"/xgb_classifier_2_model.sav"
+    filepath = 'xgb_classifier_2_model.sav'
     xgb_best = pickle.load(open(filepath, 'rb'))
 
     predictions_final = xgb_best.predict(X_test_file)
@@ -74,7 +72,7 @@ def main(argv):
     results['suffix'] = results['id'].apply(lambda row: int(row.split('_')[1]))
     results = results.sort_values('suffix')
     results = results.drop('suffix', axis=1)
-    results.to_csv(PATH+r"/prediction.csv", index=False)
+    results.to_csv('prediction.csv', index=False)
     print("Done. The prediciton csv file is in your directory :)")
 
 
